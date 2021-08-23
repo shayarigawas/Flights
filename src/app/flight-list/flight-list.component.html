@@ -1,0 +1,65 @@
+<div class="navbar">
+  <h2>Flight Search Engine</h2>
+</div>
+<div class="row">
+  <div class="side">
+      <div class="tab">
+        <button class="tablinks"  (click)="searchFlights(); oneWay = !oneWay" [ngClass]="{'active': oneWay}">One Way</button>
+        <button class="tablinks"  (click)="searchFlights(); oneWay = !oneWay" [ngClass]="{'active': !oneWay}">Return</button>
+      </div>
+      <div class="search-items">
+         <form #searchForm="ngForm" class="search-form" (ngSubmit)="searchFlights()">
+           <input class="form-field" [(ngModel)]="originCity" name="originCity" type="text" placeholder="Enter Origin City">
+           <input  class="form-field" [(ngModel)]="destCity" name="destCity" type="text" placeholder="Enter Destination City">
+           <span class="label">Departure Date</span>
+           <input  class="form-field" type="date" name="Departure Date" [(ngModel)]="departureDate">
+           <span *ngIf="!oneWay" class="label">Return Date</span>
+           <input  class="form-field" *ngIf="!oneWay" type="date" name="Return Date" [(ngModel)]="returnDate">
+          <span class="label">Passengers</span>
+          <select class="form-field" name="Passengers" [(ngModel)]="passengers" placeholder="Passengers">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+          </select>
+          <button class="search-btn">SEARCH</button>
+         </form>
+      </div>
+  </div>
+  <div class="main">
+    <div class="main-row">
+       <div class="route" *ngIf="originCity===undefined && destCity===undefined" >Book Your Flights Now</div>
+       <div *ngIf="originCity!==undefined && destCity!==undefined" class="route">{{originCity | titlecase}} > {{destCity | titlecase}} <span *ngIf="!oneWay">> {{originCity | titlecase}}</span></div>
+       <div class="flight-time" *ngIf="departureDate!==undefined || returnDate!==undefined">
+         <p> Depart: {{departureDate}}</p>
+         <p> Return: {{returnDate}}</p>
+       </div>
+    </div>
+    <hr>
+    <div class="main-list-row" *ngFor="let flight of flights">
+      <div>
+        <p class="large">Rs. {{flight.price}}</p>
+        <div class="flight-details">
+           <div>
+             <p>{{flight.code}}</p>
+             <p><b>{{flight.originCity}} > {{flight.destCity}}</b></p>
+             <p>Depart: {{flight.departDate}} {{flight.departTime}}</p>
+             <p>Arrive: {{flight.arriveDate}} {{flight.arriveTime}}</p>
+           </div>
+           <div *ngIf="!flight.oneway">
+             <p>{{flight.code}}</p>
+             <p><b>{{flight.destCity}} > {{flight.originCity}}</b></p>
+             <p>Depart: {{flight.returnDepartDate}} {{flight.returnDepartTime}}</p>
+             <p>Arrive: {{flight.returnDepartTime}} {{flight.returnArriveTime}}</p>
+           </div>
+        </div>
+      </div>
+      <div class="flight-book">
+         <img src="../../assets/images/{{flight.img}}">
+         <button class="book-btn">Book Now</button>
+      </div>
+   </div>
+   <div *ngIf="flights.length===0" class="no-records"><p>No Flights Found!!!</p></div>
+  </div>
+</div>
